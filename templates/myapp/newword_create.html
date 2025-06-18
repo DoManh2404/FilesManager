@@ -1,0 +1,78 @@
+{% extends 'myapp/common_base.html' %}
+
+{% block content %}
+    <h1>Create New Word</h1>
+    <form id="create-form" method="post" class="form">
+        {% csrf_token %}
+        <div class="col-md-6">
+            <div class="form-group m-3">
+                <label for="chinese-word">Chinese</label>
+                <input type="text" class="form-control" id="chinese-word" required>
+            </div>
+            <div class="form-group m-3">
+                <label for="chinese-pinyin">Pinyin</label>
+                <input type="text" class="form-control" id="chinese-pinyin" required>
+            </div>
+            <div class="form-group m-3">
+                <label for="english-word">English</label>
+                <input type="text" class="form-control" id="english-word" required>
+            </div>
+            <div class="form-group m-3">
+                <label for="english-ipa">IPA</label>
+                <input type="text" class="form-control" id="english-ipa" required>
+            </div>
+            <div class="form-group m-3">
+                <label for="vietnamese-word">Vietnamese</label>
+                <input type="text" class="form-control" id="vietnamese-word" required>
+            </div>
+        </div>
+        <div class="m-3">
+            <a class="btn btn-primary" href="{% url 'newword_list' %}">Cancel</a>
+            <button type="submit" id="submit-btn" class="btn btn-success">Submit</button>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $('#create-form').on('submit', function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Get data from input tags
+                var chinese_word = $('#chinese-word').val();
+                var chinese_pinyin = $('#chinese-pinyin').val();
+                var english_word = $('#english-word').val();
+                var english_ipa = $('#english-ipa').val();
+                var vietnamese_word = $('#vietnamese-word').val();
+
+                var jsonData = {
+                    'chinese_word': chinese_word,
+                    'pinyin': chinese_pinyin,
+                    'english_word': english_word,
+                    'ipa': english_ipa,
+                    'vietnamese_word': vietnamese_word,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}' // Include CSRF token
+                };
+
+                // Make AJAX POST request
+                $.ajax({
+                    type: 'POST',
+                    url: '{% url "newword_create" %}', // Replace with your actual URL
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}' // Function to retrieve CSRF token from cookie
+                    },
+                    contentType: 'application/json',
+                    data: JSON.stringify(jsonData),
+                    success: function (response) {
+                        console.log(response); // Log response for debugging
+                        // Redirect to success URL
+                        window.location.href = '{% url "newword_list" %}';
+                    },
+                    error: function (xhr, status, error) {
+                        console.error(xhr.responseText); // Log error response
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'myapp/common_base.html' %}
+
+{% block content %}
+    <h1>Update New Word</h1>
+    <form id="update-form" method="post">
+        {% csrf_token %}
+        <input type="hidden" id="newword-id" value="{{ newword_obj.id }}">
+        <div class="col-md-6">
+            <div class="form-group m-3">
+                <label for="chinese-word">Chinese</label>
+                <input type="text" class="form-control" id="chinese-word" value="{{ newword_obj.chinese_word }}">
+            </div>
+            <div class="form-group m-3">
+                <label for="chinese-pinyin">Pinyin</label>
+                <input type="text" class="form-control" id="chinese-pinyin" value="{{ newword_obj.pinyin }}">
+            </div>
+            <div class="form-group m-3">
+                <label for="english-word">English</label>
+                <input type="text" class="form-control" id="english-word" value="{{ newword_obj.english_word }}">
+            </div>
+            <div class="form-group m-3">
+                <label for="english-ipa">IPA</label>
+                <input type="text" class="form-control" id="english-ipa" value="{{ newword_obj.ipa }}">
+            </div>
+            <div class="form-group m-3">
+                <label for="vietnamese-word">Vietnamese</label>
+                <input type="text" class="form-control" id="vietnamese-word" value="{{ newword_obj.vietnamese_word }}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-md-auto">
+                <a class="m-3 btn btn-primary" href="{% url 'newword_list' %}">Cancel</a>
+            </div>
+            <div class="col col-md-auto">
+                <button type="submit" class="m-3 btn btn-success">Update</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        $(document).ready(function () {
+            $('#update-form').submit(function (event) {
+                event.preventDefault(); // Prevent default form submission
+
+                var id = $('#newword-id').val();
+                var chinese_word = $('#chinese-word').val();
+                var chinese_pinyin = $('#chinese-pinyin').val();
+                var english_word = $('#english-word').val();
+                var english_ipa = $('#english-ipa').val();
+                var vietnamese_word = $('#vietnamese-word').val();
+
+                var jsonData = {
+                    'id': id,
+                    'chinese_word': chinese_word,
+                    'pinyin': chinese_pinyin,
+                    'english_word': english_word,
+                    'ipa': english_ipa,
+                    'vietnamese_word': vietnamese_word,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/newword_edit/' + id + '/',
+                    data: jsonData,
+                    success: function (response) {
+                        console.log(response);
+                        window.location.href = "{% url 'newword_list' %}";
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        console.error(textStatus);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}

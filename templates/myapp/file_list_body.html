@@ -1,0 +1,16 @@
+{% for file in files %}
+    <tr>
+        <td class="text-center">
+            <a class="m-1 btn btn-sm btn-success" href="{% url 'file_download' file.name %}">Download</a>
+            <button class="m-1 btn btn-sm btn-danger" onclick="deleteFile('{{ file.name }}')">Delete</button>
+        </td>
+        <td class="text-left">{{ file.name }}</td>
+        <td class="text-center">{{ file.size|floatformat:2 }} MB</td>
+        <td class="text-center">{{ file.modified_time|date:"Y-m-d H:i:s" }}</td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="4" class="text-center">No files found.</td>
+    </tr>
+{% endfor %}
+

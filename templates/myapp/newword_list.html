@@ -1,0 +1,82 @@
+{% extends 'myapp/common_base.html' %}
+
+{% block content %}
+    <!--begin::App Content Header-->
+    <div class="app-content-header">
+        <!--begin::Container-->
+        <div class="container-fluid">
+            <!--begin::Row-->
+            <div class="row">
+                <div class="col-sm-6"><h3 class="mb-0">File List</h3></div>
+            </div>
+            <!--end::Row-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::App Content Header-->
+    <div class="row">
+        <div class="col-md-auto m-1">
+            <a class="btn btn-sm btn-primary" href="{% url 'newword_create' %}">Single Add</a>
+        </div>
+        <div class="col-md-auto m-1">
+            <a class="btn btn-sm btn-primary" href="{% url 'newword_excel_upload' %}">Excel upload</a>
+        </div>
+    </div>
+
+    <table class="table table-bordered text-center">
+        <thead class="table-active">
+        <tr>
+            <th class="col-sm-1">No</th>
+            <th class="col-1">Chinese</th>
+            <th class="col-1">Pinyin</th>
+            <th class="col-1">English</th>
+            <th class="col-1">IPA</th>
+            <th class="col-1">Vietnamese</th>
+            <th class="col-1">User</th>
+            <th class="col-2">Add Time</th>
+            <th class="col-1">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for data in data_list %}
+            <tr class="font-monospace">
+                <td>{{ data.id }}</td>
+                <td>{{ data.chinese_word }}</td>
+                <td>{{ data.pinyin }}</td>
+                <td>{{ data.english_word }}</td>
+                <td>{{ data.ipa }}</td>
+                <td>{{ data.vietnamese_word }}</td>
+                <td>{{ data.user }}</td>
+                <td>{{ data.add_time }}</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="{% url 'newword_edit' data.id %}">Edit</a>
+                    <a class="btn btn-sm btn-danger" href="#"
+                       onclick="newWordDelete('{{ data.id }}','{{ csrf_token }}')">Delete</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        function newWordDelete(new_word_id, crf) {
+            if (confirm("Are you sure you want to delete this new word?")) {
+                $.ajax({
+                    url: "{% url 'newword_delete' %}",
+                    type: 'POST',
+                    data: {'new_word_id': new_word_id},
+                    headers: {
+                        "X-CSRFToken": crf
+                    },
+                    success: function (data) {
+                        console.log("New word deleted successfully.");
+                        window.location.href = "/newword_list";  // Redirect to updated list
+                    },
+                    error: function (xhr, errmsg, err) {
+                        console.log("Failed to delete new word:", errmsg);
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

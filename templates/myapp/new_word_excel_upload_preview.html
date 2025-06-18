@@ -1,0 +1,41 @@
+{#new_word_excel_upload.html#}
+{% extends 'myapp/common_base.html' %}
+{% block content %}
+    <form method="post" enctype="multipart/form-data" class="form-control m-2">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-sm-auto m-1">
+                <input type="submit"
+                       value="Upload"
+                       class="btn btn-success">
+            </div>
+            <div class="col-sm-6 m-1">
+                <input type="file"
+                       title="Upload excel file"
+                       name="excel_file"
+                       class="btn btn-secondary"
+                       required="required">
+            </div>
+        </div>
+    </form>
+    <br>
+    <br>
+    <br>
+
+    {#        {% for row in excel_data %}#}
+    {#            {% for cell in row %}#}
+    {#                {{ cell }}&nbsp;&nbsp;#}
+    {#            {% endfor %}#}
+    {#            <br>#}
+    {#        {% endfor %}#}
+
+    <div class="row">
+        <div class="col col-md-auto">
+            <a class="m-3 btn btn-primary" href="{% url 'newword_list' %}">Cancel</a>
+        </div>
+        <div class="col col-md-auto">
+            <a class=" m-3 btn btn-primary" href="{% url 'newword_list' %}">Download Template File</a>
+        </div>
+    </div>
+
+{% endblock %}

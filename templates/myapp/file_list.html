@@ -1,0 +1,139 @@
+{% extends 'myapp/common_base.html' %}
+{% load static %}
+{% block content %}
+    <!-- App Content Header -->
+    <div class="app-content-header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6"><h3 class="mb-0">File List</h3></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload button -->
+    <div class="d-flex flex-row-reverse col m-1">
+        <a class="btn btn-sm btn-primary" href="{% url 'file_upload' %}">Upload File</a>
+    </div>
+
+    <!-- Search bar -->
+    <div class="container-sm">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-10 col-md-8">
+                <form id="search-form">
+                    {% csrf_token %}
+                    <div class="card-body row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <i class="fas fa-search h4 text-body"></i>
+                        </div>
+                        <div class="col">
+                            <input class="form-control form-control-sm form-control-borderless" type="search"
+                                   id="search-input-file" placeholder="Search by file name"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- File list -->
+    <div class="m-1">
+        <table class="table table-bordered">
+            <thead class="table-active">
+                <tr>
+                    <th class="text-center col-2">Actions</th>
+                    <th class="text-center col-6">File Name</th>
+                    <th class="text-center col-2">File Size</th>
+                    <th class="text-center col-2">Upload Time</th>
+                </tr>
+            </thead>
+            <tbody id="file_table_id">
+                {% include 'myapp/file_list_body.html' %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <hr/>
+    <div class="pagination">
+            <span class="step-links">
+                {% if files.has_previous %}
+                    <a class="btn btn-info btn-sm" href="?page=1">&laquo; First</a>
+                    <a class="btn btn-info btn-sm" href="?page={{ files.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                <span class="btn btn-outline-primary btn-sm current">Page {{ files.number }} of {{ files.paginator.num_pages }}</span>
+
+                {% if files.has_next %}
+                    <a class="btn btn-info btn-sm" href="?page={{ files.next_page_number }}">Next</a>
+                    <a class="btn btn-info btn-sm" href="?page={{ files.paginator.num_pages }}">Last &raquo;</a>
+                {% endif %}
+            </span>
+    </div>
+
+    <!-- Scripts start -->
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function deleteFile(file_name) {
+            if (confirm("Are you sure you want to delete this file?")) {
+                $.ajax({
+                    url: "{% url 'file_delete' %}",
+                    type: "POST",
+                    data: {file_name: file_name},
+                    headers: {"X-CSRFToken": getCookie('csrftoken')},
+                    success: function () {
+                        window.location.reload();
+                    },
+                    error: function (xhr, errmsg) {
+                        console.log("Failed to delete file:", errmsg);
+                    }
+                });
+            }
+        }
+
+
+        $(document).ready(function () {
+            $('#search-input-file').on("submit", function (e) {
+                e.preventDefault();
+            });
+
+            $('#search-input-file').keypress(function (e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    const input_value = $(this).val()
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'file_search' %}",
+                        data: {file_name: input_value},
+                        headers: {"X-CSRFToken": getCookie("csrftoken")},
+                        success: function (response) {
+                            $("#file_table_id").empty();
+                            console.log("Success,data ===> ", response);
+                            $("#file_table_id").html(response.html);
+
+                        },
+                        error: function (xhr, errmsg) {
+                            console.log("Failed to delete file:", errmsg);
+                        }
+                    })
+                }
+            });
+        });
+
+    </script>
+    <!-- Scripts end -->
+{% endblock %}
