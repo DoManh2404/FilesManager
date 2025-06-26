@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-0eky7o9u*uo%sk2r^-=49dvx$*0yn2*^pr!7t=reoo*ceq13ka
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.221.156.*', 'localhost', '10.221.157.*', '10.221.156.72', '127.0.0.1', '10.*.*.*']
+ALLOWED_HOSTS = ['*', 'localhost', '10.221.157.*', '10.221.156.72', '127.0.0.1', '192.*.*.*']
 
 INTERNAL_IPS = [
     # ...
@@ -57,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'myapp.middleware.LoginMiddleware'
 ]
 
 ROOT_URLCONF = 'FilesManager.urls'
@@ -122,7 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'  # hoặc 'static/', nên có dấu / đầu và cuối
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # nơi bạn đặt file tĩnh gốc
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'myapp', 'static')]  # nơi bạn đặt file tĩnh gốc
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # nơi collectstatic gom file vào
 
 

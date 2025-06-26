@@ -1,12 +1,10 @@
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.models import User
 from django.views import View
-from django.http import HttpResponseBadRequest, Http404, HttpResponse
+from django.http import HttpResponseBadRequest, Http404
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from ..models import MyUser
-from django.contrib.auth import get_user_model
+
 
 class LoginView(View):
     def get(self, request):
@@ -25,35 +23,36 @@ class LoginView(View):
                 return render(request, 'myapp/login.html')
         except Exception as e:
             print(e)
-            return HttpResponseBadRequest("Bad Request Message")
+            return HttpResponseBadRequest(str(e))
 
-
-User = get_user_model()
 
 class SignUpView(View):
-    def post(self, request, *args, **kwargs):
-        try:
-            uName = request.POST.get('userID')
-            uPasswork = request.POST.get('userPW')
-            uEmail = request.POST.get('userEmail')
-
-            if not uName or not uPasswork or not uEmail:
-                return HttpResponse("Data input null")
-
-            if User.objects.filter(username=uName).exists():
-                return HttpResponse("Username already exists")
-            if User.objects.filter(email=uEmail).exists():
-                return HttpResponse("Email already exists")
-
-            user = User.objects.create_user(username=uName, password=uPasswork, email=uEmail)
-            user.save()
-            return redirect('home')
-        except Exception as e:
-            print(e)
-            return HttpResponseBadRequest("Bad Request Message")
-
     def get(self, request, *args, **kwargs):
         return render(request, 'myapp/login.html')
+
+    def post(self, request, *args, **kwargs):
+        try:
+            u_name = request.POST.get('userID')
+            u_passwork = request.POST.get('userPW')
+            u_email = request.POST.get('userEmail')
+
+            if not u_name or not u_passwork or not u_email:
+                messages.error(request, 'Data input null')
+                return render(request, 'myapp/login.html', {'show_signup': True})
+            if MyUser.objects.filter(username=u_name).exists():
+                messages.error(request, 'Username already exists')
+                return render(request, 'myapp/login.html', {'show_signup': True})
+            if MyUser.objects.filter(email=u_email).exists():
+                messages.error(request, 'Email already exists')
+                return render(request, 'myapp/login.html', {'show_signup': True})
+
+            user = MyUser.objects.create_user(username=u_name, password=u_passwork, email=u_email)
+            user.save()
+            messages.success(request, 'Created user successfully')
+            return render(request, 'myapp/login.html')
+        except Exception as e:
+            print(e)
+            return HttpResponseBadRequest(str(e))
 
 
 class LogoutView(View):
@@ -71,4 +70,3 @@ class HomeView(View):
             return render(request, 'myapp/home.html')
         except Http404:
             return HttpResponseBadRequest()
-

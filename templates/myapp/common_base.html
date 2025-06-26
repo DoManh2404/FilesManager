@@ -4,10 +4,10 @@
 <!--begin::Head-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>MyWeb</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="title" content="AdminLTE"/>
+    <meta name="title" content="MyWeb"/>
     <meta name="author" content="ColorlibHQ"/>
     <!--end::Primary Meta Tags-->
     <!--begin::Fonts-->
@@ -45,18 +45,11 @@
                         <a href="/admin" class="nav-link">Admin Page</a>
                     </li>
                 {% endif %}
-                <li class="nav-item d-none d-md-block"><a href="/home" class="nav-link">Contact</a></li>
+                <li class="nav-item d-none d-md-block"><a href="/home" class="nav-link">Home</a></li>
             </ul>
             <!--end::Start Navbar Links-->
             <!--begin::End Navbar Links-->
             <ul class="navbar-nav ms-auto">
-                <!--begin::Navbar Search-->
-                <li class="nav-item">
-                    <a class="nav-link" data-widget="navbar-search" href="#" role="button">
-                        <input type="text" class="form-control" placeholder="Search..."/>
-                    </a>
-                </li>
-                <!--end::Navbar Search-->
                 <!--begin::Fullscreen Toggle-->
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-lte-toggle="fullscreen">
@@ -79,8 +72,12 @@
                     <ul class="dropdown-menu dropdown-menu dropdown-menu-end">
                         <!--begin::Menu Footer-->
                         <li class="user-footer">
-                            <a href="#" class="btn btn-default btn-flat">Profile</a>
-                            <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Sign out</a>
+                            {% if request.user.is_authenticated %}
+                                <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Sign out</a>
+                            {% else %}
+                                <a href="{% url 'login' %}" class="btn btn-default btn-flat float-end">Sign in</a>
+                            {% endif %}
+
                         </li>
                         <!--end::Menu Footer-->
                     </ul>
@@ -99,7 +96,7 @@
             <!--begin::Brand Link-->
             <a href="/home" class="brand-link">
                 <!--begin::Brand Text-->
-                <span class="brand-text fw-light">AdminLTE 4</span>
+                <span class="brand-text fw-light">Files Manager</span>
                 <!--end::Brand Text-->
             </a>
             <!--end::Brand Link-->
@@ -127,12 +124,7 @@
                             <p>New Word</p>
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a href="{% url 'file_list' %}" class="nav-link">
-                            <i class="bi bi-ev-station-fill"></i>
-                            <p>Test</p>
-                        </a>
-                    </li>
+
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="nav-icon bi bi-box-seam-fill"></i>
@@ -185,8 +177,7 @@
         <!--end::To the end-->
         <!--begin::Copyright-->
         <strong>
-            Copyright &copy; 2014-2024&nbsp;
-            <a href="https://adminlte.io" class="text-decoration-none">AdminLTE.io</a>.
+            Copyright &copy; 2025&nbsp;
         </strong>
         All rights reserved.
         <!--end::Copyright-->

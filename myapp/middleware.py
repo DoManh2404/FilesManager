@@ -10,6 +10,7 @@ url_list = [
     '/login/',
     '/test/',
     '/api/',
+    '/signup/'
 ]
 
 
@@ -19,9 +20,9 @@ class LoginMiddleware:
 
     def __call__(self, request):
         v_path = request.path
-        is_authenticated = request.usser.is_authenticate
+        is_authenticated = request.user.is_authenticated
         
-        start_with_url = any(v_path.startwith(url) for url in url_list)
+        start_with_url = any(v_path.startswith(url) for url in url_list)
         if not start_with_url and not is_authenticated:
             return HttpResponseRedirect(reverse('login'))
         return self.get_response(request)

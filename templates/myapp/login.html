@@ -68,5 +68,23 @@
 </footer>
 
 <script src="{% static 'js/login.js' %}"></script>
+
+{% if messages %}
+    <script>
+        {% for message in messages %}
+            alert("{{ message|escapejs }}");
+        {% endfor %}
+    </script>
+{% endif %}
+
+<script>
+    {% if show_signup %}
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("signUp").click(); // Chuyển sang tab SignUp
+        });
+    {% endif %}
+</script>
+
+
 </body>
 </html>
