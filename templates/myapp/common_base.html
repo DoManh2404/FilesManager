@@ -63,9 +63,9 @@
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                         <span class="d-none d-md-inline">
                             {% if request.user.is_authenticated %}
-                                Logout: {{ user.username }}
+                                Hi: {{ user.username }}
                             {% else %}
-                                Guess
+                                Hi: Guess
                             {% endif %}
                         </span>
                     </a>
@@ -73,7 +73,7 @@
                         <!--begin::Menu Footer-->
                         <li class="user-footer">
                             {% if request.user.is_authenticated %}
-                                <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Sign out</a>
+                                <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Log out</a>
                             {% else %}
                                 <a href="{% url 'login' %}" class="btn btn-default btn-flat float-end">Sign in</a>
                             {% endif %}

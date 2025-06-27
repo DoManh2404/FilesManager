@@ -134,6 +134,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
 # Set a maximum size for in-memory file uploads
 FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024 * 1024  # 10 GB
 
+# Set session to expire after 3h minutes of inactivity (in seconds)
+SESSION_COOKIE_AGE = 3 * 60 * 60  # 3h
+SESSION_SAVE_EVERY_REQUEST = True
+
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

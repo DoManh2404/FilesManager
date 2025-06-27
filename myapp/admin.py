@@ -1,11 +1,10 @@
 from django.contrib import admin
+from myapp.models import MyUser, Role
 
-from myapp.models import MyUser
-
-# Register your models here.
 
 class PermissionAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email','is_superuser','is_staff','is_active','last_login',)
+    list_display = ('username', 'email', 'role', 'is_superuser', 'is_staff', 'is_active', 'last_login')
+
 
 class MyAdminSite(admin.AdminSite):
     site_header = 'MyApp Admin'
@@ -15,7 +14,9 @@ class MyAdminSite(admin.AdminSite):
         context['site_url'] = '/home/'
         return context
 
-custom_admin_site = MyAdminSite(name='myappadmin')
-custom_admin_site.register(MyUser)
 
-admin.site.register(MyUser, PermissionAdmin)
+custom_admin_site = MyAdminSite(name='myapp_admin')  # Không dùng dấu cách
+
+# Đăng ký models vào custom admin
+custom_admin_site.register(MyUser, PermissionAdmin)
+custom_admin_site.register(Role)
