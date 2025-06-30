@@ -22,6 +22,9 @@ def get_client_ip(request):
 class FileListView(View):
     def get(self, request):
         try:
+            v_user = request.user
+            v_role = v_user.role
+
             media_path = os.path.join(settings.MEDIA_ROOT, 'uploaded_file')
             os.makedirs(media_path, exist_ok=True)
 
@@ -49,7 +52,7 @@ class FileListView(View):
             except EmptyPage:
                 files = paginator.page(paginator.num_pages)
 
-            return render(request, 'myapp/file_list.html', {'files': files})
+            return render(request, 'myapp/file_list.html', {'files': files , 'role': v_role})
         except Exception as e:
             print(e)
             return HttpResponseBadRequest("Bad Request Message")

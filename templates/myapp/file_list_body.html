@@ -1,8 +1,12 @@
 {% for file in files %}
     <tr>
         <td class="text-center">
-            <a class="m-1 btn btn-sm btn-success" href="{% url 'file_download' file.name %}">Download</a>
-            <button class="m-1 btn btn-sm btn-danger" onclick="deleteFile('{{ file.name }}')">Delete</button>
+            {% if role|lower == 'admin' or role|lower == 'manager' %}
+                <a class="m-1 btn btn-sm btn-success" href="{% url 'file_download' file.name %}">Download</a>
+                <button class="m-1 btn btn-sm btn-danger" onclick="deleteFile('{{ file.name }}')">Delete</button>
+            {% else %}
+                <a> You no have permission</a>
+            {% endif %}
         </td>
         <td class="text-left">{{ file.name }}</td>
         <td class="text-center">{{ file.size|floatformat:2 }} MB</td>
